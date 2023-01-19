@@ -5,32 +5,58 @@ using ToDo.API.Models;
 namespace ToDo.API.Controllers
 {
     [ApiController]
+    [Route("[controller]")]
+   
     public class ToDoController : Controller
     {
         private readonly TodoContext _context;
 
         public ToDoController(TodoContext context)
         {
-           _context = context;
+            _context = context;
         }
-        //public IActionResult GetTodoItem()
-        //{
-        //    var context = _context.GetTodoItem();
-        //    if (context == null)
-        //    {
-        //        return NotFound();
-        //    }
-            
-        //    return Ok(context);
-        //}
+
+        
+        [HttpGet]
+        [ActionName("GetToDoItem")]
+        public async Task<IActionResult> GetToDoItem()
+        {
+           var todoItems = new List<TodoItem>()
+            {
+                new ToDoItem
+                {
+                  Id = 1,
+                  Name = "WebAPI",
+                  IsComplete = true
+
+                },
+                new ToDoItem
+                {
+                    Id = 2,
+                    Name = "C#",
+                    IsComplete = true
+
+                },
+                new ToDoItem
+                {
+                  Id = 1,
+                  Name = "Javascript",
+                  IsComplete = true
+
+                },
+
+           };
+           return Ok(todoItems);
+
+        }
         [HttpPost]
-        public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
+        public async Task<IActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
         {
             _context.TodoItems.Add(todoItem);
-            await _context.SaveChangesAsync();
+           _context.SaveChangesAsync();
 
-            //    return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
+            //    return CreatedAtAction("GetToDoItem", new { id = todoItem.Id }, todoItem);
+            return CreatedAtAction(nameof(GetToDoItem), new { id = todoItem.Id }, todoItem);
         }
         
     }
